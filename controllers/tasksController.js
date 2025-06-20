@@ -25,7 +25,7 @@ const createTask = async (req, res) => {
 const getTasksByList = async (req, res) => {
   try {
     const { listId } = req.params;
-    const userId = req.user._id;
+    const userId = req.user.userId;
 
     const tasks = await Task.find({ listId, userId, isDeleted: false });
 
@@ -162,11 +162,16 @@ const emptyTrash = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    const result = await Task.deleteMany({ userId, isDeleted: true });
+    const result = await Task.deleteMany({ userId, isDeleted: true });    
 
-    await Task.deleteMany({ listId, userId, isDeleted: true });
+    await Task.deleteMany({ userId, isDeleted: true });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'No hay tareas en la papelera' });
+    }
 
     res.json({ message: 'La papelera se vacío', deletedCount: result.deletedCount });
+
   } catch (err) {
     res.status(500).json({ message: 'error al vaciar la papelera', err });
   }
