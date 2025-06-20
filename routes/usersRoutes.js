@@ -17,7 +17,6 @@ router.post('/register', registerUserValidator, validateResult, registerUser);
 // ruta para cambiar contraseña
 router.patch('/change-password', authMiddleware, changePasswordValidator, validateResult, changePassword);
 
-
 //ruta para ver todos los usuarios
 router.get('/:id', getUserById);
 

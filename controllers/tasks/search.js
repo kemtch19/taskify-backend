@@ -34,8 +34,6 @@ const getTasksByDateRange = async (req, res) => {
     const userId = req.user.userId;
     const { start, end } = req.query;
 
-    console.log('Fechas recibidas:', { start, end });
-
     if (!start || !end) {
       return res.status(400).json({ message: 'Debes introducir una fecha inicial y final' });
     }
@@ -45,8 +43,6 @@ const getTasksByDateRange = async (req, res) => {
     const startDate = DateTime.fromISO(start, { zone: timeZone }).startOf('day').toJSDate();
     const endDate = DateTime.fromISO(end, { zone: timeZone }).endOf('day').toJSDate();
 
-    console.log('Rango final:', { startDate, endDate });
-
     const tasks = await Task.find({
       userId,
       isDeleted: false,
@@ -55,7 +51,6 @@ const getTasksByDateRange = async (req, res) => {
 
     res.status(200).json(tasks);
   } catch (err) {
-    console.error('🔥 Error interno:', err.message);
     res.status(500).json({ message: 'Error al obtener tareas por fecha', error: err.message });
   }
 };
