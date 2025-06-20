@@ -176,7 +176,14 @@ taskify-backend/
         <br />
         <sub><b>kemtch19</b></sub>
       </a>
-    </td>    
+    </td>
+    <td align="center">
+      <a href="https://github.com/Juankyyy">
+        <img src="https://avatars.githubusercontent.com/u/103221572?v=4" width="100px;" alt="Juankyyy"/>
+        <br />
+        <sub><b>Juankyyy</b></sub>
+      </a>
+    </td>   
   </tr>
 </table>
 
