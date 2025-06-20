@@ -8,7 +8,7 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(404).json({ message: 'Correo electronico no encontrado' });
     }
 
     const isMatch = await user.comparePassword(password);
@@ -81,8 +81,43 @@ const getUserById = async (req, res) => {
   }
 }
 
+// cambiar contraseña
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, password } = req.body;
+    const userId = req.user.userId;
+
+    // vamos a validar que se envien ambos campos
+    if (!currentPassword || !password) {
+      return res.status(400).json({ message: 'Debes enviar ambos campos' });
+    }
+
+    // vamos a buscar al usuario en la base de datos
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // vamos a verificar que la contraseña actual sea correcta
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Contraseña actual incorrecta' });
+    } 
+
+    // vamos a hashear y a guardar la nueva contraseña
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    await user.save();
+
+    res.json({ message: 'Contraseña cambiada correctamente' });
+  } catch (err) {
+    res.status(500).json({ message: 'error al cambiar la contraseña', err });
+  }
+};  
+
 module.exports = {
   loginUser,
   registerUser,
-  getUserById
+  getUserById,
+  changePassword
 };
