@@ -13,6 +13,9 @@ Taskify es una API RESTful para una aplicación de gestión de tareas tipo To-Do
 - bcrypt para hashing de contraseñas
 - express-validator para validación
 - dotenv para configuración
+- MongoDB Atlas para base de datos en la nube
+- Render para despliegue gratuito del backend
+- UptimeRobot para mantener activo el servidor en Render
 
 ---
 
@@ -64,12 +67,15 @@ Authorization: Bearer TU_TOKEN
 
 ---
 
+## 📁 Endpoints disponibles
+
 ### 👤 Usuarios
 
-| Método | Ruta                  | Descripción                     |
-| ------ | --------------------- | ------------------------------- |
-| POST   | `/api/users/register` | Registrar nuevo usuario         |
-| POST   | `/api/users/login`    | Iniciar sesión y obtener JWT    |
+| Método | Ruta                     | Descripción                       |
+| ------ | ------------------------ | --------------------------------- |
+| POST   | `/api/users/register`    | Registrar nuevo usuario           |
+| POST   | `/api/users/login`       | Iniciar sesión y obtener JWT      |
+| PATCH  | `/api/users/change-pass` | Cambiar contraseña (requiere JWT) |
 
 ---
 
@@ -97,17 +103,21 @@ Authorization: Bearer TU_TOKEN
 
 ### ✅ Tasks (Tareas)
 
-| Método | Ruta                      | Descripción                                          |
-| ------ | ------------------------- | ---------------------------------------------------- |
-| POST   | `/api/tasks/create`       | Crear una nueva tarea                                |
-| GET    | `/api/tasks/list/:listId` | Obtener todas las tareas activas de una lista        |
-| GET    | `/api/tasks/:id`          | Obtener una sola tarea                               |
-| PUT    | `/api/tasks/update/:id`   | Actualizar tarea (título, descripción, prioridad...) |
-| PUT    | `/api/tasks/archive/:id`  | Archivar tarea (mover a papelera)                    |
-| PUT    | `/api/tasks/restore/:id`  | Restaurar tarea desde papelera                       |
-| DELETE | `/api/tasks/delete/:id`   | Eliminar permanentemente una tarea                   |
-| DELETE | `/api/tasks/empty-trash`  | Vaciar papelera del usuario                          |
-| GET    | `/api/tasks/trash`        | Obtener todas las tareas archivadas                  |
+| Método | Ruta                        | Descripción                               |
+| ------ | --------------------------- | ----------------------------------------- |
+| POST   | `/api/tasks/create`         | Crear una nueva tarea                     |
+| GET    | `/api/tasks/list/:listId`   | Obtener tareas activas de una lista       |
+| GET    | `/api/tasks/:id`            | Obtener una sola tarea                    |
+| GET    | `/api/tasks/search?q=texto` | Buscar tareas por título o descripción    |
+| GET    | `/api/tasks/trash`          | Obtener tareas archivadas                 |
+| GET    | `/api/tasks/date-range`     | Obtener tareas entre fechas (start y end) |
+| PATCH  | `/api/tasks/toggle/:id`     | Alternar estado completado/incompleto     |
+| PUT    | `/api/tasks/archive/:id`    | Archivar tarea (mover a papelera)         |
+| PUT    | `/api/tasks/restore/:id`    | Restaurar tarea desde papelera            |
+| PUT    | `/api/tasks/move/:id`       | Mover una tarea a otra lista              |
+| PUT    | `/api/tasks/update/:id`     | Actualizar contenido de una tarea         |
+| DELETE | `/api/tasks/delete/:id`     | Eliminar permanentemente una tarea        |
+| DELETE | `/api/tasks/empty-trash`    | Vaciar la papelera del usuario            |
 
 ---
 
@@ -144,7 +154,12 @@ taskify-backend/
 ├── controllers/
 │   ├── foldersController.js
 │   ├── listsController.js
-│   ├── tasksController.js
+│   ├── tasksController/
+│   │   ├── create.js
+│   │   ├── get.js
+│   │   ├── update.js
+│   │   ├── trash.js
+│   │   └── ...
 │   └── usersController.js
 ├── models/
 │   ├── Folder.js
@@ -156,11 +171,11 @@ taskify-backend/
 │   ├── listsRoutes.js
 │   ├── tasksRoutes.js
 │   └── usersRoutes.js
-├── validators/
 ├── middlewares/
-├── .env
+├── validators/
 ├── app.js
-├── package.json
+├── server.js
+├── .env
 └── README.md
 ```
 
