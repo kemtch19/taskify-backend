@@ -17,4 +17,8 @@ app.use('/api/folders', folderRoutes);
 app.use('/api/lists', listsRouters);
 app.use('/api/tasks', tasksRouters);
 
+app.get('/api/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 module.exports = app;
