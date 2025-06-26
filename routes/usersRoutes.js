@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, getUserById, loginUser, changePassword } = require('../controllers/usersController');
+const { registerUser, getUserById, loginUser, changePassword, getCurrentUser } = require('../controllers/usersController');    
 // import validadores
 const { registerUserValidator } = require('../middlewares/validators/user/registerValidator');
 const { loginUserValidator } = require('../middlewares/validators/user/loginValidator');
@@ -17,8 +17,12 @@ router.post('/register', registerUserValidator, validateResult, registerUser);
 // ruta para cambiar contraseña
 router.patch('/change-password', authMiddleware, changePasswordValidator, validateResult, changePassword);
 
+// ruta para ver el usuario actual
+router.get('/me', authMiddleware, getCurrentUser);
+
 //ruta para ver todos los usuarios
 router.get('/:id', getUserById);
+
 
 
 module.exports = router;

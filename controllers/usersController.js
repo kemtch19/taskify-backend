@@ -117,9 +117,25 @@ const changePassword = async (req, res) => {
   }
 };
 
+// Obtener el usuario por su token
+const getCurrentUser =async (req, res) => {
+  try {
+    const user= await User.findById(req.user.userId).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener el usuario actual', error: error.message });
+  }
+};
+
+
 module.exports = {
   loginUser,
   registerUser,
   getUserById,
-  changePassword
+  changePassword,
+  getCurrentUser
 };
