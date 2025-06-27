@@ -2,17 +2,17 @@ const List = require('../models/lists');
 
 // endpoint para crear una lista
 const createList = async (req, res) => {
-  const { title, folderId } = req.body;
+  const { title, folderId, description } = req.body;
   const userId = req.user.userId;
 
   try {
     // Validar si ya existe una lista con ese título en ese folder y ese usuario
-    const exist = await List.findOne({ title, folder: folderId, user: userId });
+    const exist = await List.findOne({ title, folder: folderId, user: userId, description: description });
     if (exist) {
       return res.status(400).json({ message: 'Ya existe una lista con ese título en esta carpeta' });
     }
 
-    const newList = await List.create({ title, folder: folderId, user: userId });
+    const newList = await List.create({ title, folder: folderId, user: userId, description: description });
     res.status(201).json(newList);
   } catch (error) {
     if (error.code === 11000) {
