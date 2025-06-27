@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, getUserById, loginUser, changePassword, getCurrentUser } = require('../controllers/usersController');    
+const { registerUser, getUserById, loginUser, changePassword, getCurrentUser, updateProfileImage } = require('../controllers/usersController');
 // import validadores
 const { registerUserValidator } = require('../middlewares/validators/user/registerValidator');
 const { loginUserValidator } = require('../middlewares/validators/user/loginValidator');
 const validateResult = require('../middlewares/validators/errors/validateResult');
 const authMiddleware = require('../middlewares/authMiddleware');
+const uploadMiddleware = require('../middlewares/uploadMiddleware');
 const { changePasswordValidator } = require('../middlewares/validators/user/usersValidator');
 
 //ruta para login
@@ -17,12 +18,13 @@ router.post('/register', registerUserValidator, validateResult, registerUser);
 // ruta para cambiar contraseña
 router.patch('/change-password', authMiddleware, changePasswordValidator, validateResult, changePassword);
 
+// ruta para actualizar la imagen del usuario
+router.post('/update-profile-image', authMiddleware, uploadMiddleware.single('image'), updateProfileImage);
+
 // ruta para ver el usuario actual
 router.get('/me', authMiddleware, getCurrentUser);
 
 //ruta para ver todos los usuarios
 router.get('/:id', getUserById);
-
-
 
 module.exports = router;

@@ -17,6 +17,14 @@ app.use('/api/folders', folderRoutes);
 app.use('/api/lists', listsRouters);
 app.use('/api/tasks', tasksRouters);
 
+app.use((err, req, res, next) => {
+  console.error('🌩️ Error capturado en middleware global:', err);
+  res.status(500).json({
+    message: 'Error inesperado del servidor',
+    error: err.message || err.toString()
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.status(200).send('OK');
 });
