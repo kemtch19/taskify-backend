@@ -1,4 +1,6 @@
-const List = require('../models/lists');
+const List = require("../models/lists");
+const Task = require("../models/tasks");
+const Folder = require("../models/folders");
 
 // endpoint para crear una lista
 const createList = async (req, res) => {
@@ -7,18 +9,36 @@ const createList = async (req, res) => {
 
   try {
     // Validar si ya existe una lista con ese título en ese folder y ese usuario
-    const exist = await List.findOne({ title, folder: folderId, user: userId, description: description });
+    const exist = await List.findOne({
+      title,
+      folder: folderId,
+      user: userId,
+      description: description,
+    });
     if (exist) {
-      return res.status(400).json({ message: 'Ya existe una lista con ese título en esta carpeta' });
+      return res
+        .status(400)
+        .json({
+          message: "Ya existe una lista con ese título en esta carpeta",
+        });
     }
 
-    const newList = await List.create({ title, folder: folderId, user: userId, description: description });
+    const newList = await List.create({
+      title,
+      folder: folderId,
+      user: userId,
+      description: description,
+    });
     res.status(201).json(newList);
   } catch (error) {
     if (error.code === 11000) {
-      return res.status(400).json({ message: 'Ya existe una lista con ese nombre' });
+      return res
+        .status(400)
+        .json({ message: "Ya existe una lista con ese nombre" });
     }
-    res.status(500).json({ message: 'Error al crear la lista', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al crear la lista", error: error.message });
   }
 };
 
@@ -31,7 +51,9 @@ const getListsByFolder = async (req, res) => {
     const lists = await List.find({ folder: folderId, user: userId });
     res.status(200).json(lists);
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las listas', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al obtener las listas", error: error.message });
   }
 };
 
@@ -49,19 +71,25 @@ const updateList = async (req, res) => {
       _id: { $ne: id }, // excluir la lista actual
       title,
       folder: list.folder,
-      user: userId
+      user: userId,
     });
 
     if (exist) {
-      return res.status(400).json({ message: 'Ya existe una lista con ese título en esta carpeta' });
+      return res
+        .status(400)
+        .json({
+          message: "Ya existe una lista con ese título en esta carpeta",
+        });
     }
 
     if (!list) {
-      return res.status(404).json({ message: 'Lista no encontrada' });
+      return res.status(404).json({ message: "Lista no encontrada" });
     }
 
     if (list.user.toString() !== userId) {
-      return res.status(401).json({ message: 'No tienes permisos para editar esta lista' });
+      return res
+        .status(401)
+        .json({ message: "No tienes permisos para editar esta lista" });
     }
 
     list.title = title || list.title;
@@ -70,9 +98,13 @@ const updateList = async (req, res) => {
     res.status(200).json(updatedList);
   } catch (error) {
     if (error.code === 11000) {
-      return res.status(400).json({ message: 'Ya existe una lista con ese nombre' });
+      return res
+        .status(400)
+        .json({ message: "Ya existe una lista con ese nombre" });
     }
-    res.status(500).json({ message: 'Error al editar la lista', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al editar la lista", error: error.message });
   }
 };
 
@@ -85,19 +117,26 @@ const deleteList = async (req, res) => {
     const list = await List.findById(id);
 
     if (!list) {
-      return res.status(404).json({ message: 'Lista no encontrada' });
+      return res.status(404).json({ message: "Lista no encontrada" });
     }
 
     if (list.user.toString() !== userId) {
-      return res.status(403).json({ message: 'No tienes permisos para eliminar esta lista' });
+      return res
+        .status(403)
+        .json({ message: "No tienes permisos para eliminar esta lista" });
     }
 
+    // 🗑️ 1️⃣ Eliminar tareas asociadas a la lista
+    await Task.deleteMany({ listId: id, userId });
+
+    // 🗑️ 2️⃣ Eliminar la lista
     await List.findByIdAndDelete(id);
 
-    res.status(200).json({ message: 'Lista eliminada correctamente' });
-
+    res.status(200).json({ message: "Lista eliminada correctamente" });
   } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar la lista', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al eliminar la lista", error: error.message });
   }
 };
 
@@ -105,5 +144,5 @@ module.exports = {
   createList,
   getListsByFolder,
   updateList,
-  deleteList
+  deleteList,
 };
