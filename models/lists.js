@@ -22,6 +22,10 @@ const listSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    icon: {
+      type: String,
+      default: null,
+    }
   },
   {
     timestamps: true,

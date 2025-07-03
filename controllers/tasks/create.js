@@ -3,7 +3,7 @@ const Task = require("../../models/tasks");
 // crear tarea
 const createTask = async (req, res) => {
   try {
-    const { title, description, priority, listId, folderId } = req.body;
+    const { title, description, priority, listId, folderId, icon } = req.body;
     const userId = req.user.userId;
 
     const task = await Task.create({
@@ -13,6 +13,7 @@ const createTask = async (req, res) => {
       listId,
       folderId,
       userId,
+      icon,
     });
 
     res.status(201).json({ message: "Tarea creada correctamente", task });

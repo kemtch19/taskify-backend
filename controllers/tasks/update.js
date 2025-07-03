@@ -4,12 +4,12 @@ const Task = require('../../models/tasks');
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, priority, completed } = req.body;
+    const { title, description, priority, completed, icon } = req.body;
     const userId = req.user.userId;
 
     const task = await Task.findOneAndUpdate(
       { _id: id, userId },
-      { title, description, priority, completed },
+      { title, description, priority, completed, icon },
       { new: true }
     );
 
