@@ -20,7 +20,7 @@ const toggleTaskCompletion = async (req, res) => {
     await task.save();
 
     res.json({ 
-        message: `Tarea marcada como ${task.completed ? 'completada' : 'pendiente'}`,
+        message: `Tarea marcada como ${task.completed ? 'completada' : 'no completada'}`,
         task 
     });
   } catch (err) {
