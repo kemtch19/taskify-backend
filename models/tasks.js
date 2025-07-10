@@ -30,11 +30,6 @@ const taskSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  folderId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Folder',
-    required: true
-  },
   isDeleted: {
     type: Boolean,
     default: false
