@@ -17,6 +17,9 @@ exports.createTaskValidator = [
     .notEmpty().withMessage('El id de la lista es obligatorio')
     .isMongoId().withMessage('El id de la lista no es valido'),
 
+  check('folderId')
+    .notEmpty().withMessage('El id de la carpeta es obligatorio')
+    .isMongoId().withMessage('El id de la carpeta no es valido'),
 ];
 
 exports.updateTaskValidator = [

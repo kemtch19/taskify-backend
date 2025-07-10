@@ -3,14 +3,15 @@ const Task = require("../../models/tasks");
 // crear tarea
 const createTask = async (req, res) => {
   try {
-    const { title, description, priority, listId, icon } = req.body;
+    const { title, description, priority, listId, folderId, icon } = req.body;
     const userId = req.user.userId;
 
     const task = await Task.create({
       title,
       description,
       priority,
-      listId,      
+      listId,
+      folderId,
       userId,
       icon,
     });
