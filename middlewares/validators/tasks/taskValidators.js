@@ -9,10 +9,6 @@ exports.createTaskValidator = [
     .optional()
     .isLength({ max: 100}).withMessage('La descripción no debe superar los 100 caracteres'),
 
-  check('priority')
-    .optional()
-    .isIn(['low', 'medium', 'high']).withMessage('La prioridad debe ser "low", "medium" o "high"'),
-
   check('listId') 
     .notEmpty().withMessage('El id de la lista es obligatorio')
     .isMongoId().withMessage('El id de la lista no es valido'),
