@@ -1,4 +1,4 @@
-const { check, param } = require('express-validator');
+const { check, param, body } = require('express-validator');
 
 exports.createTaskValidator = [
   check('title')
@@ -8,6 +8,10 @@ exports.createTaskValidator = [
   check('description')
     .optional()
     .isLength({ max: 100}).withMessage('La descripción no debe superar los 100 caracteres'),
+
+  body('priority')
+    .optional()
+    .isIn(['low', 'medium', 'high']).withMessage('La prioridad debe ser "low", "medium" o "high"'),
 
   check('listId') 
     .notEmpty().withMessage('El id de la lista es obligatorio')
