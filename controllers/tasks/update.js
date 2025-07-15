@@ -4,26 +4,31 @@ const Task = require('../../models/tasks');
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, priority, completed, icon } = req.body;
     const userId = req.user.userId;
+
+    // Solo actualiza los campos que vienen en el body
+    const fieldsToUpdate = {};
+    const allowedFields = ['title', 'description', 'priority', 'completed', 'icon'];
+
+    allowedFields.forEach(field => {
+      if (req.body[field] !== undefined) {
+        fieldsToUpdate[field] = req.body[field];
+      }
+    });
 
     const task = await Task.findOneAndUpdate(
       { _id: id, userId },
-      { title, description, priority, completed, icon },
+      fieldsToUpdate,
       { new: true }
     );
 
     if (!task) {
-      return res.status(404).json({ message: 'No se encontro la tarea' });
-    }
-
-    if (task.userId.toString() !== userId.toString()) {
-      return res.status(401).json({ message: 'No tienes permisos para editar esta tarea' });
+      return res.status(404).json({ message: 'No se encontró la tarea' });
     }
 
     res.json({ message: 'La tarea se ha actualizado correctamente', task });
   } catch (err) {
-    res.status(500).json({ message: 'error al actualizar la tarea', err });
+    res.status(500).json({ message: 'Error al actualizar la tarea', err });
   }
 };
 

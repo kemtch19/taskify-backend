@@ -23,23 +23,26 @@ exports.createTaskValidator = [
 ];
 
 exports.updateTaskValidator = [
-  param('id').isMongoId().withMessage('el Id de la tarea no es valido'),
-
-  check('title')
+  body('title')
     .optional()
-    .isLength({ min: 2}).withMessage('El título debe tener al menos 2 caracteres'),
+    .isString().withMessage('El título debe ser un texto')
+    .isLength({ min: 2 }).withMessage('El título debe tener al menos 2 caracteres'),
 
-  check('description')
+  body('description')
     .optional()
-    .isLength({ max: 100}).withMessage('La descripción no debe superar los 100 caracteres'),
+    .isString().withMessage('La descripción debe ser un texto'),
 
-  check('priority')
+  body('priority')
     .optional()
-    .isIn(['low', 'medium', 'high']).withMessage('La prioridad debe ser "low", "medium" o "high"'),
+    .isIn(['low', 'medium', 'high']).withMessage('La prioridad debe ser low, medium o high'),
 
-  check('completed')
+  body('completed')
     .optional()
-    .isBoolean().withMessage('El campo "completado" debe ser un booleano'),
+    .isBoolean().withMessage('El estado completed debe ser booleano'),
+
+  body('icon')
+    .optional()
+    .isString().withMessage('El icono debe ser un texto'),
 ];
 
 exports.taskIdParamValidator = [

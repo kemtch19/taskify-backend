@@ -50,7 +50,7 @@ router.get(
 );
 
 // Actualizar una tarea
-router.put(
+router.patch(
   '/update/:id',
   authMiddleware,
   updateTaskValidator,
