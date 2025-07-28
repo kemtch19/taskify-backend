@@ -247,12 +247,8 @@ module.exports = {
   getUserById,
   changePassword,
   getCurrentUser,
-<<<<<<< Updated upstream
-  updateProfileImage
-=======
   updateProfileImage,
   logoutUser,
   updateUserName,
   updateUserEmail
->>>>>>> Stashed changes
 };
