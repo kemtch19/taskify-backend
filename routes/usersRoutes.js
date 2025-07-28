@@ -19,7 +19,7 @@ router.post('/register', registerUserValidator, validateResult, registerUser);
 router.patch('/change-password', authMiddleware, changePasswordValidator, validateResult, changePassword);
 
 // ruta para actualizar la imagen del usuario
-router.post('/update-profile-image', authMiddleware, uploadMiddleware.single('image'), updateProfileImage);
+router.patch('/avatar/update', authMiddleware, uploadMiddleware.single('image'), updateProfileImage);
 
 // ruta para actualizar el nombre del usuario
 router.patch('/update-name', authMiddleware, updateUserName);
