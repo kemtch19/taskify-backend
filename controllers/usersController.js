@@ -1,7 +1,7 @@
 const User = require("../models/users");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const {cloudinary} = require("../config/cloudinary"); // Importar configuración de Cloudinary
+const { cloudinary } = require("../config/cloudinary"); // Importar configuración de Cloudinary
 
 // endpoint para login
 const loginUser = async (req, res) => {
@@ -24,8 +24,17 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
     );
+
+    // ✅ Enviar token en una cookie HTTP-only
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // solo en HTTPS en prod
+      sameSite: "Strict", // o 'Lax' según tu configuración
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
+    });
 
     res.status(200).json({
       message: "Usuario autenticado correctamente",
@@ -35,13 +44,22 @@ const loginUser = async (req, res) => {
         email: user.email,
         imageUrl: user.imageUrl || null, // Asegurarse de que siempre haya una URL de imagen
       },
-      token,
     });
   } catch (error) {
     res
       .status(500)
       .json({ message: "Error en el servidor", error: error.message });
   }
+};
+
+const logoutUser = (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict', // o 'Lax' si usas múltiples subdominios
+  });
+
+  res.status(200).json({ message: 'Sesión cerrada correctamente' });
 };
 
 // Endpoint para registro de usuarios
@@ -123,12 +141,10 @@ const changePassword = async (req, res) => {
 
     res.status(200).json({ message: "Contraseña actualizada correctamente" });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error al cambiar la contraseña",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Error al cambiar la contraseña",
+      error: error.message,
+    });
   }
 };
 
@@ -142,19 +158,16 @@ const getCurrentUser = async (req, res) => {
     }
     res.json(user);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error al obtener el usuario actual",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Error al obtener el usuario actual",
+      error: error.message,
+    });
   }
 };
 
 // controlador para la imagen del usuario
 const updateProfileImage = async (req, res) => {
   try {
-    
     const userId = req.user.userId;
 
     if (!req.file) {
@@ -181,7 +194,6 @@ const updateProfileImage = async (req, res) => {
       message: "Imagen actualizada correctamente",
       imageUrl: user.imageUrl,
     });
-
   } catch (error) {
     res.status(500).json({
       message: "Error en el servidor",
@@ -196,5 +208,6 @@ module.exports = {
   getUserById,
   changePassword,
   getCurrentUser,
-  updateProfileImage
+  updateProfileImage,
+  logoutUser,
 };
