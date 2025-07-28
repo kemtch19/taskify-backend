@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
+<<<<<<< Updated upstream
 const { registerUser, getUserById, loginUser, changePassword, getCurrentUser, updateProfileImage } = require('../controllers/usersController');
+=======
+const { registerUser, getUserById, loginUser, changePassword, getCurrentUser, updateProfileImage, logoutUser, updateUserName, updateUserEmail, } = require('../controllers/usersController');
+>>>>>>> Stashed changes
 // import validadores
 const { registerUserValidator } = require('../middlewares/validators/user/registerValidator');
 const { loginUserValidator } = require('../middlewares/validators/user/loginValidator');
@@ -21,8 +25,16 @@ router.patch('/change-password', authMiddleware, changePasswordValidator, valida
 // ruta para actualizar la imagen del usuario
 router.post('/update-profile-image', authMiddleware, uploadMiddleware.single('image'), updateProfileImage);
 
+<<<<<<< Updated upstream
 // ruta para ver el usuario actual
 router.get('/me', authMiddleware, getCurrentUser);
+=======
+// ruta para actualizar el nombre del usuario
+router.patch('/update-name', authMiddleware, updateUserName);
+
+// ruta para actualizar el email del usuario
+router.patch('/update-email', authMiddleware, updateUserEmail);
+>>>>>>> Stashed changes
 
 //ruta para ver todos los usuarios
 router.get('/:id', getUserById);

@@ -190,11 +190,69 @@ const updateProfileImage = async (req, res) => {
   }
 };
 
+// Cambiar nombre del usuario
+const updateUserName = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { newName } = req.body;
+
+    if (!newName || newName.trim().length < 2) {
+      return res.status(400).json({ message: "Nombre inválido" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+
+    user.name = newName.trim();
+    await user.save();
+
+    res.status(200).json({ message: "Nombre actualizado correctamente", name: user.name });
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar el nombre", error: error.message });
+  }
+};
+
+// Cambiar correo del usuario
+const updateUserEmail = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { newEmail } = req.body;
+
+    if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+      return res.status(400).json({ message: "Correo electrónico inválido" });
+    }
+
+    // Verificar que el nuevo correo no esté en uso
+    const emailInUse = await User.findOne({ email: newEmail });
+    if (emailInUse && emailInUse._id.toString() !== userId) {
+      return res.status(400).json({ message: "Este correo ya está en uso" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+
+    user.email = newEmail.toLowerCase().trim();
+    await user.save();
+
+    res.status(200).json({ message: "Correo actualizado correctamente", email: user.email });
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar el correo", error: error.message });
+  }
+};
+
+
 module.exports = {
   loginUser,
   registerUser,
   getUserById,
   changePassword,
   getCurrentUser,
+<<<<<<< Updated upstream
   updateProfileImage
+=======
+  updateProfileImage,
+  logoutUser,
+  updateUserName,
+  updateUserEmail
+>>>>>>> Stashed changes
 };
