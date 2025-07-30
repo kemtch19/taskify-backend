@@ -30,18 +30,6 @@ npm install
 
 ---
 
-## ⚙️ Variables de entorno (`.env`)
-
-Crea un archivo `.env` en la raíz con:
-
-```
-PORT=5000
-MONGO_URI=uri_de_mongodb
-JWT_SECRET=clave_secreta
-```
-
----
-
 ## ▶️ Ejecución del servidor
 
 ```bash
@@ -49,22 +37,6 @@ npm run dev
 ```
 
 Servidor disponible en: `http://localhost:5000`
-
----
-
-## 🔐 Autenticación
-
-Todas las rutas (excepto registro y login) están protegidas con **JWT**.
-
-Agrega este header en Postman o en tu cliente:
-
-```
-Authorization: Bearer TU_TOKEN
-```
-
----
-
-## 📁 Endpoints disponibles
 
 ---
 
