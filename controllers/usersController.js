@@ -248,7 +248,6 @@ module.exports = {
   changePassword,
   getCurrentUser,
   updateProfileImage,
-  logoutUser,
   updateUserName,
   updateUserEmail
 };
