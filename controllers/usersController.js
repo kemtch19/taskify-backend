@@ -32,7 +32,7 @@ const loginUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // solo en HTTPS en prod
-      sameSite: "Lax", // o 'Lax' según tu configuración
+      sameSite: "Strict", // o 'Lax' según tu configuración
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
     });
 
