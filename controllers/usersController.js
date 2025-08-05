@@ -252,6 +252,39 @@ const updateUserEmail = async (req, res) => {
   }
 };
 
+// Eliminar imagen de perfil del usuario
+const deleteProfileImage = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    if (user.imagePublicId) {
+      // Eliminar la imagen de Cloudinary
+      await cloudinary.uploader.destroy(user.imagePublicId);
+
+      // Limpiar campos en la base de datos
+      user.imageUrl = null;
+      user.imagePublicId = null;
+      await user.save();
+
+      return res.status(200).json({ message: "Imagen eliminada correctamente" });
+    } else {
+      return res.status(400).json({ message: "El usuario no tiene imagen de perfil" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al eliminar la imagen",
+      error: error.message,
+    });
+  }
+};
+
+
 
 module.exports = {
   loginUser,
@@ -262,5 +295,6 @@ module.exports = {
   updateProfileImage,
   logoutUser,
   updateUserName,
-  updateUserEmail
+  updateUserEmail,
+  deleteProfileImage,
 };

@@ -11,6 +11,7 @@ const {
   logoutUser,
   updateUserName,
   updateUserEmail,
+  deleteProfileImage,
 } = require("../controllers/usersController");
 // import validadores
 const {
@@ -53,6 +54,12 @@ router.patch(
   authMiddleware,
   uploadMiddleware.single("image"),
   updateProfileImage
+);
+
+router.delete(
+  "/avatar/delete",
+  authMiddleware,
+  deleteProfileImage
 );
 
 // ruta para actualizar el nombre del usuario
