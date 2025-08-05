@@ -21,11 +21,11 @@ const userSchema = new mongoose.Schema({
   },
   imageUrl:{
     type: String,
-    default: ''
+    default: 'undefined'
   },
   imagePublicId:{
     type: String,
-    default: ''
+    default: 'undefined'
   }
 }, {
   timestamps: true,
