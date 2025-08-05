@@ -268,7 +268,7 @@ const deleteProfileImage = async (req, res) => {
       await cloudinary.uploader.destroy(user.imagePublicId);
 
       // Limpiar campos en la base de datos
-      user.imageUrl = null;
+      user.imageUrl = "undefined";
       user.imagePublicId = null;
       await user.save();
 
