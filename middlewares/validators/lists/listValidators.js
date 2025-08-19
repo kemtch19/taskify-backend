@@ -11,10 +11,24 @@ exports.createListValidator = [
 ];
 
 exports.updateListValidator = [
-  param('id').isMongoId().withMessage('el ID de la lista no es valido'),
-  check('title')
-    .notEmpty().withMessage('El nuevo título es obligatorio')
-    .isLength({ min: 2 }).withMessage('El título debe tener al menos 2 caracteres'),
+  param("id")
+    .isMongoId()
+    .withMessage("El ID de la lista no es válido"),
+
+  check("title")
+    .optional() 
+    .isLength({ min: 2 })
+    .withMessage("El título debe tener al menos 2 caracteres"),
+
+  check("description")
+    .optional()
+    .isString()
+    .withMessage("La descripción debe ser un texto"),
+
+  check("icon")
+    .optional()
+    .isString()
+    .withMessage("El icono debe ser un texto"),
 ];
 
 exports.deleteListValidator = [

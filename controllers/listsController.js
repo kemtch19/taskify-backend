@@ -60,53 +60,48 @@ const getListsByFolder = async (req, res) => {
 // endpoint para editar una lista
 const updateList = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { title, description, icon } = req.body;
   const userId = req.user.userId;
 
   try {
     const list = await List.findById(id);
-
-    // Verificar si ya existe otra lista con el mismo título en la misma carpeta y del mismo usuario
-    const exist = await List.findOne({
-      _id: { $ne: id }, // excluir la lista actual
-      title,
-      folder: list.folder,
-      user: userId,
-    });
-
-    if (exist) {
-      return res
-        .status(400)
-        .json({
-          message: "Ya existe una lista con ese título en esta carpeta",
-        });
-    }
-
     if (!list) {
       return res.status(404).json({ message: "Lista no encontrada" });
     }
 
     if (list.user.toString() !== userId) {
-      return res
-        .status(401)
-        .json({ message: "No tienes permisos para editar esta lista" });
+      return res.status(401).json({ message: "No tienes permisos para editar esta lista" });
     }
 
-    list.title = title || list.title;
-    const updatedList = await list.save();
+    // Solo validar título si viene en el body
+    if (title !== undefined) {
+      const exist = await List.findOne({
+        _id: { $ne: id },
+        title,
+        folder: list.folder,
+        user: userId,
+      });
 
+      if (exist) {
+        return res.status(400).json({ message: "Ya existe una lista con ese título en esta carpeta" });
+      }
+
+      list.title = title;
+    }
+
+    if (description !== undefined) list.description = description;
+    if (icon !== undefined) list.icon = icon;
+
+    const updatedList = await list.save();
     res.status(200).json(updatedList);
   } catch (error) {
     if (error.code === 11000) {
-      return res
-        .status(400)
-        .json({ message: "Ya existe una lista con ese nombre" });
+      return res.status(400).json({ message: "Ya existe una lista con ese nombre" });
     }
-    res
-      .status(500)
-      .json({ message: "Error al editar la lista", error: error.message });
+    res.status(500).json({ message: "Error al editar la lista", error: error.message });
   }
 };
+
 
 // endpoint para eliminar una lista
 const deleteList = async (req, res) => {
