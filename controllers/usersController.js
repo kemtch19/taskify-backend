@@ -24,16 +24,14 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      process.env.JWT_SECRET
     );
 
     // ✅ Enviar token en una cookie HTTP-only
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // solo en HTTPS en prod
-      sameSite: "None", // o 'Lax' según tu configuración
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
+      sameSite: "Lax", // o 'Lax' según tu configuración
     });
 
     res.status(200).json({
@@ -53,13 +51,13 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-  res.clearCookie('token', {
+  res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'Strict', // o 'Lax' si usas múltiples subdominios
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Lax", // o 'Lax' si usas múltiples subdominios
   });
 
-  res.status(200).json({ message: 'Sesión cerrada correctamente' });
+  res.status(200).json({ message: "Sesión cerrada correctamente" });
 };
 
 // Endpoint para registro de usuarios
@@ -213,14 +211,19 @@ const updateUserName = async (req, res) => {
     }
 
     const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+    if (!user)
+      return res.status(404).json({ message: "Usuario no encontrado" });
 
     user.name = newName.trim();
     await user.save();
 
-    res.status(200).json({ message: "Nombre actualizado correctamente", name: user.name });
+    res
+      .status(200)
+      .json({ message: "Nombre actualizado correctamente", name: user.name });
   } catch (error) {
-    res.status(500).json({ message: "Error al actualizar el nombre", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al actualizar el nombre", error: error.message });
   }
 };
 
@@ -241,14 +244,19 @@ const updateUserEmail = async (req, res) => {
     }
 
     const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+    if (!user)
+      return res.status(404).json({ message: "Usuario no encontrado" });
 
     user.email = newEmail.toLowerCase().trim();
     await user.save();
 
-    res.status(200).json({ message: "Correo actualizado correctamente", email: user.email });
+    res
+      .status(200)
+      .json({ message: "Correo actualizado correctamente", email: user.email });
   } catch (error) {
-    res.status(500).json({ message: "Error al actualizar el correo", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al actualizar el correo", error: error.message });
   }
 };
 
@@ -272,9 +280,13 @@ const deleteProfileImage = async (req, res) => {
       user.imagePublicId = null;
       await user.save();
 
-      return res.status(200).json({ message: "Imagen eliminada correctamente" });
+      return res
+        .status(200)
+        .json({ message: "Imagen eliminada correctamente" });
     } else {
-      return res.status(400).json({ message: "El usuario no tiene imagen de perfil" });
+      return res
+        .status(400)
+        .json({ message: "El usuario no tiene imagen de perfil" });
     }
   } catch (error) {
     res.status(500).json({
@@ -283,8 +295,6 @@ const deleteProfileImage = async (req, res) => {
     });
   }
 };
-
-
 
 module.exports = {
   loginUser,
