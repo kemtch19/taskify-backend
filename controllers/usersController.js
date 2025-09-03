@@ -31,7 +31,7 @@ const loginUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // solo en HTTPS en prod
-      sameSite: "Lax", // o 'Lax' según tu configuración
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // o 'Lax' según tu configuración
     });
 
     res.status(200).json({
