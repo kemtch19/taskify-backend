@@ -50,12 +50,15 @@ const loginUser = async (req, res) => {
   }
 };
 
-const logoutUser = (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Lax", // o 'Lax' si usas múltiples subdominios
-  });
+const logoutUser = async (req, res) => {
+  try {
+    await res.clearCookie("token");
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al cerrar la sesión",
+      error: error.message,
+    });
+  }
 
   res.status(200).json({ message: "Sesión cerrada correctamente" });
 };
