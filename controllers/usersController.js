@@ -27,11 +27,11 @@ const loginUser = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    // ✅ Enviar token en una cookie HTTP-only
+    // Enviar token en una cookie HTTP-only
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // solo en HTTPS en prod
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // o 'Lax' según tu configuración
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     });
 
     res.status(200).json({
@@ -52,7 +52,11 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
   try {
-    await res.clearCookie("token");
+    await res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    });
   } catch (error) {
     res.status(500).json({
       message: "Error al cerrar la sesión",
