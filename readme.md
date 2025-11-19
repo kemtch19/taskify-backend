@@ -1,6 +1,29 @@
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/taskify-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/taskify-light.png">
+  <img width=500 alt="Taskify Logo">
+</picture>
+</p>
+
+<p align="center">
+  <a href="https://taskifyyy.vercel.app/auth">🌐 Sitio web</a>
+  |
+  <a href="https://github.com/Juankyyy/taskify-frontend">🎨 Frontend</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/kemtch19/taskify-backend/commits/main/">
+    <img src="https://img.shields.io/github/last-commit/kemtch19/taskify-backend?label=Last%20Commit&color=FFFF00">
+  </a>
+  <a href="https://github.com/kemtch19/taskify-backend/commits/main/">
+    <img src="https://img.shields.io/github/commit-activity/t/kemtch19/taskify-backend?label=All%20time%20commits&color=FFFF00">
+  </a>
+</p>
+
 # 📝 Taskify Backend
 
-Taskify es una API RESTful para una aplicación de gestión de tareas tipo To-Do List, desarrollada con **Node.js**, **Express** y **MongoDB**. Soporta autenticación con JWT, operaciones CRUD para usuarios, carpetas, listas y tareas, incluyendo funcionalidades como papelera de reciclaje para tareas.
+taskify-backend es una API RESTful para una aplicación de gestión de tareas tipo To-Do List, desarrollada con **Node.js**, **Express** y **MongoDB**. Soporta autenticación con JWT, operaciones CRUD para usuarios, carpetas, listas y tareas, incluyendo funcionalidades como papelera de reciclaje para tareas.
 
 ---
 
@@ -37,6 +60,41 @@ npm run dev
 ```
 
 Servidor disponible en: `http://localhost:5000`
+
+---
+
+## 📂 Estructura del proyecto
+
+```
+taskify-backend/
+├── controllers/
+│   ├── foldersController.js
+│   ├── listsController.js
+│   ├── tasksController/
+│   │   ├── create.js
+│   │   ├── get.js
+│   │   ├── update.js
+│   │   ├── trash.js
+│   │   └── ...
+│   └── usersController.js
+├── models/
+│   ├── Folder.js
+│   ├── List.js
+│   ├── Task.js
+│   └── User.js
+├── routes/
+│   ├── foldersRoutes.js
+│   ├── listsRoutes.js
+│   ├── tasksRoutes.js
+│   └── usersRoutes.js
+├── middlewares/
+├── validators/
+├── config/
+├── app.js
+├── server.js
+├── .env
+└── README.md
+```
 
 ---
 
@@ -105,41 +163,7 @@ Servidor disponible en: `http://localhost:5000`
 - Todos los `:id` deben ser IDs válidos de MongoDB.
 - `priority` puede ser: "low", "medium" o "high".
 - Tareas archivadas no se incluyen en los listados normales, pero pueden restaurarse o eliminarse desde la papelera.
-
----
-
-## 📂 Estructura del proyecto
-
-```
-taskify-backend/
-├── controllers/
-│   ├── foldersController.js
-│   ├── listsController.js
-│   ├── tasksController/
-│   │   ├── create.js
-│   │   ├── get.js
-│   │   ├── update.js
-│   │   ├── trash.js
-│   │   └── ...
-│   └── usersController.js
-├── models/
-│   ├── Folder.js
-│   ├── List.js
-│   ├── Task.js
-│   └── User.js
-├── routes/
-│   ├── foldersRoutes.js
-│   ├── listsRoutes.js
-│   ├── tasksRoutes.js
-│   └── usersRoutes.js
-├── middlewares/
-├── validators/
-├── config/
-├── app.js
-├── server.js
-├── .env
-└── README.md
-```
+- Tiene variables de entorno que `.envexample` que son importantes para la buena ejecución de este proyecto.
 
 ---
 
